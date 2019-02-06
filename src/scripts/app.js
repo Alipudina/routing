@@ -3,21 +3,6 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter, NavLink, Route} from 'react-router-dom';
 
-const MyCreatePost = props => {
-  return (
-    <CreatePost createPost={this.createPost.bind(this)}
-                postInfo={this.state.postInfo}
-                changeAuthor={this.changeAuthor.bind(this)}
-                changeTitle={this.changeTitle.bind(this)}
-                changeContent={this.changeContent.bind(this)}
-                />
-              );
-}
-
-const MyShowPostsConstructor = props => {
-  return <ShowPosts country="Vietnam" />;
-}
-
 class NavList extends React.Component {
   render() {
     return (
@@ -53,7 +38,7 @@ class CreatePost extends React.Component {
   render() {
     console.log(this.props);
     return (
-      <form>
+      <form onSubmit={this.props.createPost}>
         <div className="input-group mb-3 input-group-lg">
           <div className="input-group-prepend">
             <span className="input-group-text">Your name:</span>
@@ -81,13 +66,14 @@ class CreatePost extends React.Component {
 class App extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {posts: [], postAuthor: '', postTitle: '', postContent: ''}}
+    this.state = {posts: [], postAuthor: '', postTitle: '', postContent: '', country: 'Vietnam'};
   }
 
   createPost(event) {
+    event.preventDefault();
     const postsCopy = [...this.state.posts];
     postsCopy.push({author: this.state.postAuthor, title: this.state.postTitle, content: this.state.postContent});
-    this.setState({posts: postsCopy});
+    this.setState({posts: postsCopy, postAuthor: '', postTitle: '', postContent: ''});
   }
 
   changeAuthor(event) {
@@ -103,7 +89,7 @@ class App extends React.Component {
   }
 
   changeContent(event) {
-    let contentCopy = this.state.postInfo.content;
+    let contentCopy = this.state.content;
     contentCopy = event.target.value;
     this.setState({postContent: contentCopy});
   }
@@ -114,9 +100,15 @@ class App extends React.Component {
         <div className="container">
             <NavList />
             <div className="jumbotron">
-              <Route path="/dist" component={Welcomer} />
-              <Route path="/create" render={MyCreatePost} />
-              <Route path="/show" exact render={MyShowPostsConstructor}/>
+              <Route path="/dist" exact component={Welcomer} />
+              <Route path="/create" exact render={() => {
+                return (<CreatePost createPost={this.createPost.bind(this)}
+                          changeAuthor={this.changeAuthor.bind(this)}
+                          changeTitle={this.changeTitle.bind(this)}
+                          changeContent={this.changeContent.bind(this)}
+                          postInfo={{author: this.state.postAuthor, title: this.state.postTitle, content: this.state.postContent}}
+                          />) }} />
+              <Route path="/show" exact render={() => <ShowPosts country={this.state.country} />} />
             </div>
         </div>
       </BrowserRouter>
