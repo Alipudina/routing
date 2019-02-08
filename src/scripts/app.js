@@ -29,14 +29,34 @@ class Welcomer extends React.Component {
 
 class ShowPosts extends React.Component {
   render() {
-    return <h4 className="display-3">Hello, {this.props.country}</h4>;
+    return (
+      <React.Fragment>
+        <h2 className="title">Select a blog post to examine</h2>
+        <div className="container">
+        {this.props.allPosts.map((postInfo, index) => {
+          return (
+            <div className="card my-2" key={index}>
+              <div className="card-header">
+              <h3 className="title text-center">{postInfo.title}</h3>
+              </div>
+              <div className="card-body">
+              <p className="lead">{postInfo.content}</p>
+              </div>
+              <div className="card-footer">
+              <p className="lead"><strong>{postInfo.author}</strong> wrote at: {postInfo.date.getDate()}/{postInfo.date.getMonth() + 1}/{postInfo.date.getFullYear()}</p>
+              </div>
+            </div>
+          )
+        })}
+        </div>
+      </React.Fragment>
+    )
   }
 }
 
 class CreatePost extends React.Component {
 
   render() {
-    console.log(this.props);
     return (
       <form onSubmit={this.props.createPost}>
         <div className="input-group mb-3 input-group-lg">
@@ -66,13 +86,14 @@ class CreatePost extends React.Component {
 class App extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {posts: [], postAuthor: '', postTitle: '', postContent: '', country: 'Vietnam'};
+    this.state = {posts: [], postAuthor: '', postTitle: '', postContent: '', date: undefined};
   }
 
   createPost(event) {
     event.preventDefault();
     const postsCopy = [...this.state.posts];
-    postsCopy.push({author: this.state.postAuthor, title: this.state.postTitle, content: this.state.postContent});
+    const currentDate = new Date();
+    postsCopy.push({author: this.state.postAuthor, title: this.state.postTitle, content: this.state.postContent, date: currentDate});
     this.setState({posts: postsCopy, postAuthor: '', postTitle: '', postContent: ''});
   }
 
@@ -108,7 +129,7 @@ class App extends React.Component {
                           changeContent={this.changeContent.bind(this)}
                           postInfo={{author: this.state.postAuthor, title: this.state.postTitle, content: this.state.postContent}}
                           />) }} />
-              <Route path="/show" exact render={() => <ShowPosts country={this.state.country} />} />
+              <Route path="/show" exact render={() => <ShowPosts allPosts={this.state.posts} />} />
             </div>
         </div>
       </BrowserRouter>
