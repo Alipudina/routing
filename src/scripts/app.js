@@ -27,29 +27,43 @@ class Welcomer extends React.Component {
   }
 }
 
+class SinglePost extends React.Component {
+  render() {
+    console.log(this.props.logger);
+    return (
+      <div className="card my-2">
+        <div className="card-header">
+        <h3 className="title text-center">{this.props.postInfo.title}</h3>
+        </div>
+        <div className="card-body">
+        <p className="lead">{this.props.postInfo.content}</p>
+        </div>
+        <div className="card-footer">
+        <p className="lead"><strong>{this.props.postInfo.author}</strong> wrote at: Yesterday</p>
+        </div>
+      </div>
+    )
+  }
+}
+
 class ShowPosts extends React.Component {
+
   render() {
     return (
-      <React.Fragment>
-        <h2 className="title">Select a blog post to examine</h2>
-        <div className="container">
-        {this.props.allPosts.map((postInfo, index) => {
-          return (
-            <div className="card my-2" key={index}>
-              <div className="card-header">
-              <h3 className="title text-center">{postInfo.title}</h3>
-              </div>
-              <div className="card-body">
-              <p className="lead">{postInfo.content}</p>
-              </div>
-              <div className="card-footer">
-              <p className="lead"><strong>{postInfo.author}</strong> wrote at: {postInfo.date.getDate()}/{postInfo.date.getMonth() + 1}/{postInfo.date.getFullYear()}</p>
-              </div>
-            </div>
-          )
-        })}
-        </div>
-      </React.Fragment>
+      <BrowserRouter>
+        <React.Fragment>
+          <h2 className="title">Select a blog post to examine</h2>
+          <div className="container">
+          {this.props.allPosts.map((postInfo, index) => {
+            return (
+              <NavLink to={"/single/" + index} key={index}>
+                <SinglePost postInfo={postInfo} />
+              </NavLink>
+            )
+          })}
+          </div>
+        </React.Fragment>
+      </BrowserRouter>
     )
   }
 }
@@ -130,6 +144,7 @@ class App extends React.Component {
                           postInfo={{author: this.state.postAuthor, title: this.state.postTitle, content: this.state.postContent}}
                           />) }} />
               <Route path="/show" exact render={() => <ShowPosts allPosts={this.state.posts} />} />
+              <Route path="/single/:postid" exact render={() => <SinglePost postInfo={{author: 'Jake', title: 'My DCI days', content: 'Whatever i like!'}}/>} />
             </div>
         </div>
       </BrowserRouter>
