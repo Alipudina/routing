@@ -1,7 +1,7 @@
 import '../styles/main.scss';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter, NavLink, Route} from 'react-router-dom';
+import { BrowserRouter, NavLink, Route, Switch} from 'react-router-dom';
 
 class NavList extends React.Component {
   render() {
@@ -29,7 +29,6 @@ class Welcomer extends React.Component {
 
 class SinglePost extends React.Component {
   render() {
-    console.log(this.props.logger);
     return (
       <div className="card my-2">
         <div className="card-header">
@@ -54,13 +53,19 @@ class ShowPosts extends React.Component {
         <React.Fragment>
           <h2 className="title">Select a blog post to examine</h2>
           <div className="container">
-          {this.props.allPosts.map((postInfo, index) => {
-            return (
-              <NavLink to={"/single/" + index} key={index}>
-                <SinglePost postInfo={postInfo} />
-              </NavLink>
-            )
-          })}
+          {this.props.match.url === '/show' && this.props.allPosts.map((postInfo, index) => {
+              return (
+                <NavLink to={"/single/" + index} key={index}>
+                  <SinglePost postInfo={postInfo} />
+                </NavLink>
+              )
+            })
+          }
+          <Route path="/single/:postid" exact render={({match}) => {
+            const createInfoObject = this.props.allPosts[match.params.postid];
+            return <SinglePost postInfo={createInfoObject} />;
+          }} />
+
           </div>
         </React.Fragment>
       </BrowserRouter>
@@ -143,8 +148,7 @@ class App extends React.Component {
                           changeContent={this.changeContent.bind(this)}
                           postInfo={{author: this.state.postAuthor, title: this.state.postTitle, content: this.state.postContent}}
                           />) }} />
-              <Route path="/show" exact render={() => <ShowPosts allPosts={this.state.posts} />} />
-              <Route path="/single/:postid" exact render={() => <SinglePost postInfo={{author: 'Jake', title: 'My DCI days', content: 'Whatever i like!'}}/>} />
+              <Route path="/show" exact render={({match}) => <ShowPosts allPosts={this.state.posts} match={match}/>} />
             </div>
         </div>
       </BrowserRouter>
