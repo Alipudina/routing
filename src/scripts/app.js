@@ -23,7 +23,7 @@ class NavList extends React.Component {
 
 class Welcomer extends React.Component {
   render() {
-    return <h2 className="display-2">Welcome to the simplest blog spot in the world</h2>;
+    return <h2 className="display-2">Welcome to our Blog site!</h2>;
   }
 }
 
@@ -76,19 +76,19 @@ class CreatePost extends React.Component {
       <form onSubmit={this.props.createPost}>
         <div className="input-group mb-3 input-group-lg">
           <div className="input-group-prepend">
-            <span className="input-group-text">Your name:</span>
+            <span className="input-group-text">Your username:</span>
           </div>
           <input type="text" className="form-control" onChange={this.props.changeAuthor} value={this.props.postInfo.author} />
         </div>
         <div className="input-group mb-3 input-group-lg">
           <div className="input-group-prepend">
-            <span className="input-group-text">Your title:</span>
+            <span className="input-group-text">Your blog title:</span>
           </div>
           <input type="text" className="form-control" onChange={this.props.changeTitle} value={this.props.postInfo.title} />
         </div>
         <div className="input-group mb-3 input-group-lg">
           <div className="input-group-prepend">
-            <span className="input-group-text">Your title:</span>
+            <span className="input-group-text">Your blog post:</span>
           </div>
           <textarea className="form-control" onChange={this.props.changeContent} value={this.props.postInfo.content}></textarea>
         </div>
