@@ -38,7 +38,9 @@ class SinglePost extends React.Component {
         <p className="lead">{this.props.postInfo.content}</p>
         </div>
         <div className="card-footer">
-        <p className="lead"><strong>{this.props.postInfo.author}</strong> wrote at: Yesterday</p>
+        <p className="lead"><strong>{this.props.postInfo.author} </strong>
+         wrote at: {this.props.postInfo.date.getDate()}/{this.props.postInfo.date.getMonth() + 1}/{this.props.postInfo.date.getFullYear()}
+         </p>
         </div>
       </div>
     )
@@ -49,26 +51,20 @@ class ShowPosts extends React.Component {
 
   render() {
     return (
-      <BrowserRouter>
         <React.Fragment>
           <h2 className="title">Select a blog post to examine</h2>
           <div className="container">
-          {this.props.match.url === '/show' && this.props.allPosts.map((postInfo, index) => {
+          {this.props.allPosts.map((postInfo, index) => {
               return (
-                <NavLink to={"/single/" + index} key={index}>
+                <NavLink to={'/singlepost/' + index} key={index}>
                   <SinglePost postInfo={postInfo} />
                 </NavLink>
               )
             })
           }
-          <Route path="/single/:postid" exact render={({match}) => {
-            const createInfoObject = this.props.allPosts[match.params.postid];
-            return <SinglePost postInfo={createInfoObject} />;
-          }} />
 
           </div>
         </React.Fragment>
-      </BrowserRouter>
     )
   }
 }
@@ -113,7 +109,7 @@ class App extends React.Component {
     const postsCopy = [...this.state.posts];
     const currentDate = new Date();
     postsCopy.push({author: this.state.postAuthor, title: this.state.postTitle, content: this.state.postContent, date: currentDate});
-    this.setState({posts: postsCopy, postAuthor: '', postTitle: '', postContent: ''});
+    this.setState({posts: postsCopy, postAuthor: '', postTitle: '', postContent: '', date: currentDate});
   }
 
   changeAuthor(event) {
@@ -148,10 +144,19 @@ class App extends React.Component {
                           changeContent={this.changeContent.bind(this)}
                           postInfo={{author: this.state.postAuthor, title: this.state.postTitle, content: this.state.postContent}}
                           />) }} />
-              <Route path="/show" exact render={({match}) => <ShowPosts allPosts={this.state.posts} match={match}/>} />
+
+              <Switch>
+                <Route path="/show" exact render={() => <ShowPosts allPosts={this.state.posts} />} />
+                <Route path={'/singlepost/:id'} exact render={({match}) => {
+                  const tempPosts = [...this.state.posts];
+                  const createInfoObject = tempPosts[match.params.id];
+                  return <SinglePost postInfo={createInfoObject} />;
+                }} />
+              </Switch>
             </div>
-        </div>
-      </BrowserRouter>
+
+          </div>
+        </BrowserRouter>
     );
   }
 }
