@@ -1,44 +1,46 @@
 import '../styles/main.scss';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter, NavLink, Route} from 'react-router-dom';
+import { BrowserRouter, NavLink, Route } from 'react-router-dom';
 
-class NavList extends React.Component {
+class HomeWelcomeMessage extends React.Component {
   render() {
-    return (
-      <ul className="nav">
-        <li className="nav-item">
-          <NavLink className="nav-link" to="/dist">Show Something</NavLink>
-        </li>
-        <li className="nav-item">
-          <NavLink className="nav-link" to="/else">Show Something else</NavLink>
-        </li>
-        <li className="nav-item">
-          <NavLink className="nav-link" to="/different">Show Something different</NavLink>
-        </li>
-        <li className="nav-item">
-          <NavLink className="nav-link" to="/amazing">Show something amazing!</NavLink>
-        </li>
-      </ul>
-    )
+    return <h1>No place like home!</h1>;
   }
 }
 
 class App extends React.Component {
+
+
   render() {
     return (
       <BrowserRouter>
-        <div className="container">
-            <NavList />
+        <React.Fragment>
+          <ul className="nav">
+            <li className="nav-item">
+              <NavLink className="nav-link" to="/dist">Home</NavLink>
+            </li>
+            <li className="nav-item">
+              <NavLink className="nav-link" to="/dist/content">Content</NavLink>
+            </li>
+            <li className="nav-item">
+              <NavLink className="nav-link" to="/features">Features</NavLink>
+            </li>
+            <li className="nav-item">
+              <NavLink className="nav-link" to="/contact">Contact</NavLink>
+            </li>
+          </ul>
+          <div className="container">
             <div className="jumbotron">
-              <Route path="/dist" exact render={() => <h3 className="title">Something</h3>}/>
-              <Route path="/else" exact render={() => <h3 className="title">Else</h3>}/>
-              <Route path="/different" exact render={() => <h3 className="title">Different</h3>}/>
-              <Route path="/amazing" exact render={() => <h3 className="title">Amazing</h3>}/>
+              <Route path="/dist" exact render={() => <HomeWelcomeMessage />}/>
+              <Route path="/dist/content" exact render={() => <h1>This is the content page</h1>}/>
+              <Route path="/features" exact render={() => <h1>This is the features page</h1>}/>
+              <Route path="/contact" exact render={() => <h1>This is the contact page</h1>}/>
             </div>
-        </div>
+          </div>
+        </React.Fragment>
       </BrowserRouter>
-    );
+    )
   }
 }
 
